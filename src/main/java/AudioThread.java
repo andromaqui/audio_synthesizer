@@ -28,7 +28,7 @@ public class AudioThread extends Thread {
     AL.createCapabilities(ALC.createCapabilities(device));
     source = alGenSources();
     for(int i=0; i < BUFFER_COUNT; i++) {
-        bufferSamples(new short[0]);
+      bufferSamples(new short[0]);
     }
     alSourcePlay(source);
     catchInternalException();
@@ -48,14 +48,14 @@ public class AudioThread extends Thread {
       }
       int processedBufs = alGetSourcei(source, AL_BUFFERS_PROCESSED);
       for(int i = 0; i<processedBufs; ++i) {
-         short[] samples = buffersSupplier.get();
-         if(samples == null) {
-           running = false;
-           break;
-         }
-         alDeleteBuffers(alSourceUnqueueBuffers(source));
-         buffers[bufferIndex] = alGenBuffers();
-         bufferSamples(samples);
+        short[] samples = buffersSupplier.get();
+        if(samples == null) {
+          running = false;
+          break;
+        }
+        alDeleteBuffers(alSourceUnqueueBuffers(source));
+        buffers[bufferIndex] = alGenBuffers();
+        bufferSamples(samples);
       }
       if(alGetSourcei(source, AL_SOURCE_STATE) != AL_PLAYING) {
         alSourcePlay(source);
@@ -81,10 +81,10 @@ public class AudioThread extends Thread {
   what happens after 84?
    */
   private void bufferSamples(short[] samples) {
-      int buf = buffers[bufferIndex++];
-      alBufferData(buf, AL_FORMAT_MONO16, samples, SynthesizerRemastered.AudioInfo.SAMPLE_RATE);
-      alSourceQueueBuffers(source, buf);
-      bufferIndex %= BUFFER_COUNT;
+    int buf = buffers[bufferIndex++];
+    alBufferData(buf, AL_FORMAT_MONO16, samples, SynthesizerRemastered.AudioInfo.SAMPLE_RATE);
+    alSourceQueueBuffers(source, buf);
+    bufferIndex %= BUFFER_COUNT;
   }
 
   private void catchInternalException() {
@@ -94,3 +94,4 @@ public class AudioThread extends Thread {
     }
   }
 }
+

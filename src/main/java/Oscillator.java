@@ -4,22 +4,24 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.Random;
 
-public class Oscillator extends JPanel {
+public class Oscillator extends SynthControlContainer {
 
   private static final double FREQUENCY = 440;
   private WaveForm waveForm = WaveForm.Sine;
   private final Random random = new Random();
   private int wavePos;
 
-  public Oscillator() {
+  public Oscillator(SynthesizerRemastered synthesizerRemastered) {
+
+    super(synthesizerRemastered);
     JComboBox<WaveForm> comboBox = new JComboBox<>(new WaveForm[] {WaveForm.Sine, WaveForm.Square, WaveForm.Sav, WaveForm.Trianle, WaveForm.Noise});
     comboBox.setSelectedItem(WaveForm.Sine);
     comboBox.setBounds(10, 10, 75, 25);
     comboBox.addItemListener(listener -> {
 
-        if(listener.getStateChange() == ItemEvent.SELECTED) {
-          waveForm = (WaveForm) listener.getItem();
-        }
+      if(listener.getStateChange() == ItemEvent.SELECTED) {
+        waveForm = (WaveForm) listener.getItem();
+      }
     });
     add(comboBox);
     setSize(289, 100);
@@ -44,6 +46,9 @@ public class Oscillator extends JPanel {
         return 2d * Math.abs((tDivP - Math.floor(0.5 + tDivP))) - 1;
       case Noise:
         return random.nextDouble();
+      default:
+        throw new RuntimeException("Waveform not known");
     }
   }
 }
+
