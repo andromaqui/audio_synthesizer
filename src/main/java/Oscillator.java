@@ -6,10 +6,11 @@ import java.util.Random;
 
 public class Oscillator extends SynthControlContainer {
 
-  private static final double FREQUENCY = 440;
   private WaveForm waveForm = WaveForm.Sine;
   private final Random random = new Random();
   private int wavePos;
+  private double keyFrequency;
+  private double frequency;
 
   public Oscillator(SynthesizerRemastered synthesizerRemastered) {
 
@@ -33,13 +34,22 @@ public class Oscillator extends SynthControlContainer {
     Sine, Square, Sav, Trianle, Noise
   }
 
+  public double getFrequency() {
+    return frequency;
+  }
+
+  public void setFrequency(double frequency) {
+    keyFrequency = this.frequency = frequency;
+    // apply tone offset
+  }
+
   public double nextSample() {
-    double tDivP = (wavePos++ / (double) SynthesizerRemastered.AudioInfo.SAMPLE_RATE / (1d / FREQUENCY));
+    double tDivP = (wavePos++ / (double) SynthesizerRemastered.AudioInfo.SAMPLE_RATE / (1d / frequency));
     switch (waveForm) {
       case Sine:
-        return Math.sin(Utils.Math.frequencyToAngularFrequency(FREQUENCY) * (wavePos - 1) / SynthesizerRemastered.AudioInfo.SAMPLE_RATE);
+        return Math.sin(Utils.Math.frequencyToAngularFrequency(frequency) * (wavePos - 1) / SynthesizerRemastered.AudioInfo.SAMPLE_RATE);
       case Square:
-        return Math.signum(Math.sin(Utils.Math.frequencyToAngularFrequency(FREQUENCY) * (wavePos - 1) / SynthesizerRemastered.AudioInfo.SAMPLE_RATE));
+        return Math.signum(Math.sin(Utils.Math.frequencyToAngularFrequency(frequency) * (wavePos - 1) / SynthesizerRemastered.AudioInfo.SAMPLE_RATE));
       case Sav:
         return 2d * (tDivP - Math.floor(0.5 + tDivP));
       case Trianle:

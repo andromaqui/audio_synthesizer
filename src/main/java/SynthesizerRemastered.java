@@ -1,14 +1,18 @@
 
+import utils.Utils;
+
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
 
 public class SynthesizerRemastered {
 
+  private static final HashMap<Character, Double> KEY_FREQUENCIES = new HashMap<>();
+
   private boolean shouldGenerate;
-  private int wavePos;
   private final JFrame frame = new JFrame("Synthesizer Remastered");
   private final Oscillator[] oscillators = new Oscillator[3];
   private final AudioThread thread = new AudioThread(() ->
@@ -33,6 +37,10 @@ public class SynthesizerRemastered {
       @Override
       public void keyPressed(final KeyEvent e) {
         if(!thread.isRunning()){
+
+          for(Oscillator oscillator : oscillators) {
+            
+          }
           shouldGenerate = true;
           thread.triggeredPlayback();
         }
@@ -43,6 +51,19 @@ public class SynthesizerRemastered {
         shouldGenerate = false;
       }
   };
+
+  static {
+    final int STARTING_KEY =  16;
+    final int KEY_FREQUENCY_INCREMENT = 2;
+    final char[] KEYS = "qwertzuiopü+asdfghjklöäyxcvbnm,.-".toCharArray();
+    for(int i = STARTING_KEY, key = 0; i < KEYS.length * KEY_FREQUENCY_INCREMENT + STARTING_KEY; i += KEY_FREQUENCY_INCREMENT, ++key) {
+        KEY_FREQUENCIES.put(KEYS[key], Utils.Math.getKeyFrequency(i));
+    }
+
+    for(Double d : KEY_FREQUENCIES.values()) {
+      System.out.println(d);
+    }
+  }
 
   SynthesizerRemastered(){
     int y = 0;
