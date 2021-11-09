@@ -23,11 +23,12 @@ public class SynthesizerRemastered {
        short[] s = new short[AudioThread.BUFFER_SIZE];
        for(int i=0; i<AudioThread.BUFFER_SIZE; ++i) {
          double d = 0;
+
          for(Oscillator oscillator: oscillators) {
             d += oscillator.nextSample() / oscillators.length;
          }
+
          s[i] = (short) (Short.MAX_VALUE * d);
-         //s[i] = (short)(Short.MAX_VALUE * Math.sin((2 * Math.PI * 440) / AudioInfo.SAMPLE_RATE * wavePos++));
        }
        return s;
      }
@@ -39,7 +40,7 @@ public class SynthesizerRemastered {
         if(!thread.isRunning()){
 
           for(Oscillator oscillator : oscillators) {
-            
+              oscillator.setKeyFrequency(KEY_FREQUENCIES.get(e.getKeyChar()));
           }
           shouldGenerate = true;
           thread.triggeredPlayback();
@@ -92,7 +93,6 @@ public class SynthesizerRemastered {
 
   public static class AudioInfo {
     public static final int SAMPLE_RATE = 44100;
-
   }
 
   public KeyAdapter getKeyAdapter() {

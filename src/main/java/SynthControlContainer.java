@@ -3,6 +3,7 @@ import java.awt.*;
 
 public class SynthControlContainer extends JPanel {
 
+  protected Point mouseClickLocation;
   protected SynthesizerRemastered synthesizerRemastered;
   protected boolean on;
 
