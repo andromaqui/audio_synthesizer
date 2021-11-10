@@ -2,6 +2,7 @@
 import utils.Utils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -15,6 +16,7 @@ public class SynthesizerRemastered {
   private boolean shouldGenerate;
   private final JFrame frame = new JFrame("Synthesizer Remastered");
   private final Oscillator[] oscillators = new Oscillator[3];
+  private final PianoKeys keyboard;
   private final AudioThread thread = new AudioThread(() ->
      {
        if(!shouldGenerate) {
@@ -42,6 +44,8 @@ public class SynthesizerRemastered {
           for(Oscillator oscillator : oscillators) {
               oscillator.setKeyFrequency(KEY_FREQUENCIES.get(e.getKeyChar()));
           }
+          keyboard.addKeyDown(e.getKeyChar());
+          keyboard.repaint();
           shouldGenerate = true;
           thread.triggeredPlayback();
         }
@@ -50,13 +54,15 @@ public class SynthesizerRemastered {
       @Override
       public void keyReleased(final KeyEvent e) {
         shouldGenerate = false;
+        keyboard.removeKeyDown(e.getKeyChar());
+        keyboard.repaint();
       }
   };
 
   static {
     final int STARTING_KEY =  16;
     final int KEY_FREQUENCY_INCREMENT = 2;
-    final char[] KEYS = "qwertzuiopü+asdfghjklöäyxcvbnm,.-".toCharArray();
+    final char[] KEYS = "q2we4r5tz7u8i9opßü´<ysxdcfvbhnjm,l.ö-".toCharArray();
     for(int i = STARTING_KEY, key = 0; i < KEYS.length * KEY_FREQUENCY_INCREMENT + STARTING_KEY; i += KEY_FREQUENCY_INCREMENT, ++key) {
         KEY_FREQUENCIES.put(KEYS[key], Utils.Math.getKeyFrequency(i));
     }
@@ -67,27 +73,41 @@ public class SynthesizerRemastered {
   }
 
   SynthesizerRemastered(){
+    JPanel container = new JPanel();
+    container.setSize(1000, 1000);
+    container.setLayout(new GridLayout(5,5));
+
+    // add oscilators to panel
     int y = 0;
     for(int i =0; i < oscillators.length; ++i) {
       oscillators[i] = new Oscillator(this);
-      oscillators[i].setLocation(5, y);
-      frame.add(oscillators[i]);
+      //oscillators[i].setLocation(5, y);
+      container.add(oscillators[i]);
       y+=105;
     }
 
-    //oscillator.setVisible(true);
+    // add keyboard to panel
+    keyboard = new PianoKeys(this);
+    keyboard.setFocusable(true);
+    container.add(keyboard);
+
+    // make frame visible
+    frame.setSize(1000, 1000);
+    frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    frame.setBackground(Color.WHITE);
+    frame.setLayout(new BorderLayout());
+    frame.add(container);
+    frame.setVisible(true);
+
     frame.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(final WindowEvent e) {
         thread.close();
       }
     });
-    frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    frame.setSize(613, 357);
+
     frame.setResizable(false);
-    frame.setLayout(null);
     frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
     frame.addKeyListener(keyAdapter);
   }
 

@@ -5,7 +5,10 @@ This project is still a WIP and it is my attempt to develop my own synth. Initia
 ## Instructions
 In order to run the project you should have Maven and Java 10 installed on your machine.
 
+## Description
+
 ## TODO
 - Beautify code
-- Add ways to control the frequency played from the keyboard
 - Add comments around the logic used behind oscillators
+- Add volume control
+- Add low pass & high pass filter

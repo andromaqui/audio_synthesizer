@@ -20,8 +20,11 @@ public class Oscillator extends SynthControlContainer {
   private double frequency;
 
   public Oscillator(SynthesizerRemastered synthesizerRemastered) {
-
     super(synthesizerRemastered);
+    setSize(289, 100);
+    setBorder(Utils.WindowDesign.LINE_BORDER);
+    setLayout(null);
+
     JLabel toneParameter = new JLabel("x0.00");
     toneParameter.setBounds(165, 65, 50, 25);
     toneParameter.setBorder(Utils.WindowDesign.LINE_BORDER);
@@ -76,9 +79,6 @@ public class Oscillator extends SynthControlContainer {
       }
     });
     add(comboBox);
-    setSize(289, 100);
-    setBorder(Utils.WindowDesign.LINE_BORDER);
-    setLayout(null);
   }
 
   private enum WaveForm {
