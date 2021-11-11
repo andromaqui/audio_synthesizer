@@ -1,6 +1,4 @@
-
 import utils.Utils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -15,7 +13,7 @@ public class SynthesizerRemastered {
 
   private boolean shouldGenerate;
   private final JFrame frame = new JFrame("Synthesizer Remastered");
-  private final Oscillator[] oscillators = new Oscillator[3];
+  private final Oscillator[] oscillators = new Oscillator[2];
   private final PianoKeys keyboard;
   private final AudioThread thread = new AudioThread(() ->
      {
@@ -73,18 +71,21 @@ public class SynthesizerRemastered {
   }
 
   SynthesizerRemastered(){
+    JPanel invisibleContainer = new JPanel();
+    invisibleContainer.setSize(600, 600);
+    invisibleContainer.setLayout(new BoxLayout(invisibleContainer, BoxLayout.X_AXIS));
     JPanel container = new JPanel();
     container.setSize(1000, 1000);
-    container.setLayout(new GridLayout(5,5));
+    container.setLayout(new GridLayout(2,2));
 
     // add oscilators to panel
     int y = 0;
     for(int i =0; i < oscillators.length; ++i) {
       oscillators[i] = new Oscillator(this);
-      //oscillators[i].setLocation(5, y);
-      container.add(oscillators[i]);
+      invisibleContainer.add(oscillators[i]);
       y+=105;
     }
+    container.add(invisibleContainer);
 
     // add keyboard to panel
     keyboard = new PianoKeys(this);
@@ -98,7 +99,6 @@ public class SynthesizerRemastered {
     frame.setLayout(new BorderLayout());
     frame.add(container);
     frame.setVisible(true);
-
     frame.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(final WindowEvent e) {
