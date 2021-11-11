@@ -6,6 +6,7 @@ This project is still a WIP and it is my attempt to develop my own synth. Initia
 In order to run the project you should have Maven and Java 10 installed on your machine.
 
 ## Description
+![Screenshot](synth.png)
 
 ## TODO
 - Beautify code
